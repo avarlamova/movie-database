@@ -14,7 +14,10 @@ interface FilmInterface {
 
   let errormsg: string | null = null; 
 
-const element = document.querySelector('#id') as HTMLHeadingElement;
-element.innerText = 'Hello world';
+const app = document.getElementById("app");
+// 2. Create a new <p></p> element programmatically
+const p = document.createElement("div");
+// 3. Add the text content
+p.textContent = filmname;
+app?.appendChild(p);
 
-export default element;

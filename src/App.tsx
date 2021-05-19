@@ -1,17 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import { FormEvent } from 'react';
+import FilmComponent from './FilmComponent';
 import './App.css';
+import { IFilm } from './IFilm';
 
 function App() {
 
   const URL = 'http://www.omdbapi.com/?apikey=';
   const API_KEY = 'cc5fc055';
 
-  const [filmChosen, setFilmChosen] = useState('');
-  const [searchedFilm, setSearchedFilm] = useState('Titanic');
+  const [filmChosen, setFilmChosen] = useState<IFilm[]>([]);
+  const [searchedFilm, setSearchedFilm] = useState('');
 
-  const getFilm = async (query: string) : Promise<any> => {
-    await fetch(`${URL}${API_KEY}&t=${searchedFilm}`)
+  const getFilm = async (query: string) : Promise<IFilm[]> => {
+    return await fetch(`${URL}${API_KEY}&t=${searchedFilm}`)
     .then(response=> {
       if (response.ok===true)
       return response.json()
@@ -22,10 +24,10 @@ function App() {
     })   
   };
 
-  const searchFilm = (e: FormEvent<HTMLFormElement>) => {
+  const searchFilm = (e: FormEvent) => {
     e.preventDefault(); //to stop the page from submitting and reloading
     const formContent = e.target as HTMLFormElement;
-    const input = formContent.querySelector('#inputField');
+    const input = formContent.querySelector('#inputField') as HTMLInputElement;
     setSearchedFilm(input.value);
     input.value = '';
   }
@@ -48,6 +50,13 @@ function App() {
       <form> 
         <input id="inputField" type="text" onSubmit={e=> {searchFilm(e)}}></input>
         <button> Search </button>
+        {searchedFilm && <p>Results for {searchedFilm}...</p>}
+      <div className="films-container">
+        {filmChosen.length &&
+          filmChosen.map(film =>
+            (<FilmComponent key={film.IMDB}></FilmComponent>))
+        }
+        </div>
       </form>
     </div>
   );

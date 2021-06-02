@@ -12,8 +12,8 @@ function App() {
   const [filmChosen, setFilmChosen] = useState<IFilm[]>([]);
   const [searchedFilm, setSearchedFilm] = useState('');
 
-  const getFilm = async (query: string) : Promise<IFilm[]> => {
-    return await fetch(`${URL}${API_KEY}&t=${searchedFilm}`)
+  const getFilm = async (query: String): Promise<IFilm[]> => {
+    return await fetch(`${URL}${API_KEY}&t=${query}`)
     .then(response=> {
       if (response.ok===true)
       return response.json()
@@ -21,42 +21,50 @@ function App() {
     })
     .then (res => {
       return res.results
-    })   
+    })  
   };
 
   const searchFilm = (e: FormEvent) => {
     e.preventDefault(); //to stop the page from submitting and reloading
     const formContent = e.target as HTMLFormElement;
+    console.log(e.target)
     const input = formContent.querySelector('#inputField') as HTMLInputElement;
+    console.log(input)
     setSearchedFilm(input.value);
     input.value = '';
   }
+  
 
-
-  useEffect(() => {
+   useEffect(() => {
+     try {
     (async () => {
       const query = encodeURIComponent(searchedFilm);
-      if (query) {
       const result = await getFilm(query);
-      console.log(result);
       setFilmChosen(result);
-      }
     })();
-  }, [searchedFilm]);
+  }
+  catch (err) {
+    console.log(err)
+  }
+}, [searchedFilm]);
 
   return (
     <div className="App">
       <h3> Search for movies </h3>
       <form> 
-        <input id="inputField" type="text" onSubmit={e=> {searchFilm(e)}}></input>
+        <h1> {filmChosen} </h1>
+        <input id="inputField" placeholder='type film' type="text" onSubmit={e=> {searchFilm(e)}}></input>
         <button> Search </button>
-        {searchedFilm && <p>Results for {searchedFilm}...</p>}
+        { searchedFilm ? 
+        <>
+        <p>Results for {searchedFilm}...</p>
       <div className="films-container">
-        {filmChosen.length &&
+        {filmChosen ? 
           filmChosen.map(film =>
-            (<FilmComponent key={film.IMDB}></FilmComponent>))
-        }
+            (<FilmComponent key={film.IMDB} film={film}></FilmComponent>))
+        : ''}
         </div>
+        </> : ''}
       </form>
     </div>
   );

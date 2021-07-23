@@ -1,7 +1,7 @@
 export interface IFilm {
-    title: string,
-    year: number,
-    IMDB: number,
-    src: string,
-    plot: string,
+  Title: string;
+  Year: number;
+  IMDB: number;
+  Src: string;
+  Plot: string;
 }

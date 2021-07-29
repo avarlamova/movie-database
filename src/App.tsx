@@ -13,7 +13,7 @@ function App() {
   const [searchedFilm, setSearchedFilm] = useState("");
   //const [filmsFound, setFilmsFound] = useState([]);
 
-  const getFilm = async (query: string) => {
+  /* const getFilm = async (query: string) => {
     return await fetch(`${URL}${API_KEY}&t=${query}`)
       //return await fetch("http://www.omdbapi.com/?apikey=cc5fc055&t=titanic")
       .then((response) => {
@@ -21,7 +21,7 @@ function App() {
         else throw new Error("Error");
       })
       .then((res) => {
-        //setFilmChosen(res);
+        setFilmChosen(res);
         console.log(filmChosen);
         return res;
       });
@@ -34,14 +34,16 @@ function App() {
     setSearchedFilm(input.value);
     input.value = "";
   };
-
+*/
   useEffect(() => {
     try {
       (async () => {
-        const query = encodeURIComponent(searchedFilm);
-        const result = await getFilm(query);
-        console.log(result);
-        setFilmChosen(result.Title);
+        //const query = encodeURIComponent(searchedFilm);
+        const result = await fetch(
+          "http://www.omdbapi.com/?apikey=cc5fc055&t=titanic"
+        );
+        console.log(JSON.parse(result.toString()));
+        setFilmChosen(JSON.parse(result.toString()));
       })();
     } catch (err) {
       console.log(err);

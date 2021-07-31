@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { FormEvent } from "react";
 import "./App.css";
-//import { IFilm } from "./IFilm";
+import { IFilm } from "./IFilm";
+import FilmComponent from "./FilmComponent";
 
 function App() {
   const URL = "http://www.omdbapi.com/?apikey=";
   const API_KEY = "cc5fc055";
 
-  const [filmsFound, setFilmsFound] = useState([]);
+  const [filmsFound, setFilmsFound] = useState<IFilm>({
+    Title: "",
+    Year: 0,
+    IMDB: 0,
+    Poster: "",
+    Plot: "",
+  });
   const [filmSearch, setFilmsSearch] = useState("");
 
-  const searchForFilms = async (query: string): Promise<any> => {
-    //const result = await fetch(`${URL}${API_KEY}&t=${query}`);
-    const result = await fetch(
-      "http://www.omdbapi.com/?apikey=cc5fc055&t=titanic"
-    );
+  const searchForFilms = async (query: string): Promise<IFilm> => {
+    const result = await fetch(`${URL}${API_KEY}&t=${query}`);
     return await result.json();
   };
 
@@ -23,6 +27,7 @@ function App() {
       const query = encodeURIComponent(filmSearch);
       if (query) {
         const response = await searchForFilms(query);
+        console.log(response);
         setFilmsFound(response);
       }
     })();
@@ -41,6 +46,13 @@ function App() {
         <input id="inputField" placeholder="type film" type="text"></input>
         <button> Search </button>
       </form>
+      {filmSearch && <p> Results for {filmSearch}...</p>}
+
+      <div className="filmContainter">
+        {/* {filmsFound.length &&
+          filmsFound.map((film) => (  */}
+        <FilmComponent key={filmsFound.IMDB} film={filmsFound}></FilmComponent>
+      </div>
     </div>
   );
 }

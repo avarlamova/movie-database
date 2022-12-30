@@ -4,4 +4,5 @@ export interface IFilm {
   IMDB: number;
   Poster: string;
   Plot: string;
+  Error?: string;
 }

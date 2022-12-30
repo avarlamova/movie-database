@@ -3,8 +3,10 @@ import { FormEvent } from "react";
 import "./App.css";
 import { IFilm } from "./IFilm";
 import FilmComponent from "./FilmComponent";
+import ErrorComponent from "./ErrorComponent";
+import PropagateLoader from "react-spinners/PropagateLoader";
 
-function App() {
+const App = () => {
   const URL = "http://www.omdbapi.com/?apikey=";
   const API_KEY = "cc5fc055";
 
@@ -16,6 +18,8 @@ function App() {
     Plot: "",
   });
   const [filmSearch, setFilmsSearch] = useState("");
+  const [searchError, setSearchError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const searchForFilms = async (query: string): Promise<IFilm> => {
     const result = await fetch(`${URL}${API_KEY}&t=${query}`);
@@ -26,9 +30,14 @@ function App() {
     (async () => {
       const query = encodeURIComponent(filmSearch);
       if (query) {
+        setSearchError(false);
         const response = await searchForFilms(query);
-        console.log(response);
-        setFilmsFound(response);
+        setLoading(false);
+        if (response.Error) {
+          setSearchError(true);
+        } else {
+          setFilmsFound(response);
+        }
       }
     })();
   }, [filmSearch]);
@@ -38,6 +47,7 @@ function App() {
     const form = event.target as HTMLFormElement;
     const input = form.querySelector("#inputField") as HTMLInputElement;
     setFilmsSearch(input.value);
+    setLoading(true);
   };
   return (
     <div className="App">
@@ -49,12 +59,21 @@ function App() {
       {filmSearch && <p> Results for {filmSearch}...</p>}
 
       <div className="filmContainter">
-        {/* {filmsFound.length &&
-          filmsFound.map((film) => (  */}
-        <FilmComponent key={filmsFound.IMDB} film={filmsFound}></FilmComponent>
+        {searchError ? (
+          <ErrorComponent />
+        ) : loading ? (
+          <PropagateLoader
+            color={"#32a868"}
+            loading={loading}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        ) : (
+          <FilmComponent key={filmsFound.IMDB} film={filmsFound} />
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default App;

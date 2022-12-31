@@ -53,11 +53,16 @@ const App = () => {
     <div className="App">
       <h3> Search for movies </h3>
       <form onSubmit={(event) => search(event)}>
-        <input id="inputField" placeholder="type film" type="text"></input>
-        <button> Search </button>
+        <input
+          id="inputField"
+          className="inputField"
+          placeholder="type film"
+          type="text"
+        ></input>
+        <input type="image" src="/" alt="Submit" />
+        {/* <button> Search </button> */}
       </form>
       {filmSearch && <p> Results for {filmSearch}...</p>}
-
       <div className="filmContainter">
         {searchError ? (
           <ErrorComponent />

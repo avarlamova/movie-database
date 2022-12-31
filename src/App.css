@@ -1,5 +1,24 @@
 .App {
   text-align: center;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+}
+
+.inputField {
+  background-color: #3a3f47;
+  color: #ffffff;
+  border-radius: 16px;
+  font-size: 14px;
+  width: 327px;
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+*::placeholder {
+  color: #67686d;
+  opacity: 1;
+  /* for Firefox */
 }
 
 .App-logo {
